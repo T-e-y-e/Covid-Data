@@ -1,29 +1,26 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-export const getData = createAsyncThunk("covidData/getData", async () => {
-    return await fetch("https://covidnigeria.herokuapp.com/api").then((res) => {
-        res.json()
-    })
+const initialState = {
+  covidState: [],
+  loading: true,
+};
+
+const CovidState = createSlice({
+  name: "covid",
+  initialState,
+  reducers: {
+    setCovidToInitialState: () => ({ ...initialState }),
+
+    setAllStates: (state, action) => {
+      state.covidState = action.payload;
+    },
+
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+  },
 });
 
-const covidDataSlice = createSlice(({
-    name: "covidData",
-    initialState: {
-        covidData: [],
-        loading: false,
-    },
-    extraReducers: {
-        [getData.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [getData.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.covidData = action.payload;
-        },
-        [getData.rejected]: (state, action) => {
-            state.loading = false;
-        },
-    },
-}));
+export const { setCovidToInitialState, setAllStates, setLoading } = CovidState.actions;
 
-export default covidDataSlice
+export default CovidState.reducer;
